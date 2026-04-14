@@ -29,6 +29,7 @@ if ($provider === 'google') {
     $email = $googleData['email'];
 }
 
+// ── Fetch existing user (now includes id) ─────────────────────
 $stmt = $conn->prepare('SELECT id, first_name, last_name, email, phone FROM users WHERE email = ?');
 
 if (!$stmt) {
@@ -46,6 +47,7 @@ if ($user) {
         'success'     => true,
         'is_new_user' => false,
         'user' => [
+            'id'         => $user['id'],
             'first_name' => $user['first_name'],
             'last_name'  => $user['last_name'],
             'email'      => $user['email'],
@@ -63,11 +65,13 @@ if ($user) {
     $emptyPassword = '';
     $stmt->bind_param('sss', $email, $emptyPassword, $provider);
     $stmt->execute();
+    $newId = $conn->insert_id;
 
     echo json_encode([
         'success'     => true,
         'is_new_user' => true,
         'user' => [
+            'id'         => $newId,
             'first_name' => '',
             'last_name'  => '',
             'email'      => $email,
