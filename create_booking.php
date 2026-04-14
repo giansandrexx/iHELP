@@ -37,14 +37,6 @@ try {
     $check->execute();
     $result = $check->get_result();
 
-    if ($result->num_rows > 0) {
-        echo json_encode([
-            "success" => false,
-            "message" => "Time slot already booked"
-        ]);
-        exit;
-    }
-
     $stmt = $conn->prepare("
         INSERT INTO bookings 
         (user_id, service_id, address_id, booking_date, booking_time, instructions)
