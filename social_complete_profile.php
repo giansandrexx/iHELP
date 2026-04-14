@@ -26,7 +26,17 @@ if (!$stmt) {
 $stmt->bind_param("ssss", $first_name, $last_name, $phone, $email);
 
 if ($stmt->execute()) {
-    echo json_encode(["success" => true, "message" => "Profile saved"]);
+    $idStmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $idStmt->bind_param("s", $email);
+    $idStmt->execute();
+    $idResult = $idStmt->get_result();
+    $idRow    = $idResult->fetch_assoc();
+
+    echo json_encode([
+        "success" => true,
+        "message" => "Profile saved",
+        "user"    => ["id" => $idRow['id']]
+    ]);
 } else {
     echo json_encode(["success" => false, "message" => $stmt->error]);
 }
