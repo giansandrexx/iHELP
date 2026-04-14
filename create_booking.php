@@ -4,10 +4,8 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type");
 
-// ✅ USE CONFIG
 require_once 'config.php';
 
-// GET JSON INPUT
 $data = json_decode(file_get_contents("php://input"), true);
 
 $user_id     = $data['user_id'] ?? null;
@@ -17,7 +15,6 @@ $date        = $data['date'] ?? null;
 $time        = $data['time'] ?? null;
 $instructions= $data['instructions'] ?? "";
 
-// VALIDATION
 if (!$user_id || !$service_id || !$address_id || !$date || !$time) {
     echo json_encode([
         "success" => false,
@@ -28,7 +25,6 @@ if (!$user_id || !$service_id || !$address_id || !$date || !$time) {
 
 try {
 
-    // 🚫 CHECK DOUBLE BOOKING
     $check = $conn->prepare("
         SELECT id FROM bookings
         WHERE service_id = ?
@@ -49,7 +45,6 @@ try {
         exit;
     }
 
-    // ✅ INSERT BOOKING
     $stmt = $conn->prepare("
         INSERT INTO bookings 
         (user_id, service_id, address_id, booking_date, booking_time, instructions)
