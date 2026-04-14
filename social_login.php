@@ -29,7 +29,6 @@ if ($provider === 'google') {
     $email = $googleData['email'];
 }
 
-// ── Fetch existing user (now includes id) ─────────────────────
 $stmt = $conn->prepare('SELECT id, first_name, last_name, email, phone FROM users WHERE email = ?');
 
 if (!$stmt) {
